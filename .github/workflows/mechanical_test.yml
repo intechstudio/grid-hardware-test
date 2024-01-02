@@ -1,0 +1,50 @@
+name: mechanical_test
+
+on:
+  workflow_dispatch:
+  push:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  generate-artifacts:
+    name: freecad export
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        component:
+        - 'PCBA-ENDLESSPOT'
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y xvfb x11vnc
+        sudo apt-get  install snapd
+        sudo snap install freecad
+        sudo apt-get install -y openscad
+        Xvfb :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
+        sleep 10  # Give Xvfb some time to start
+        x11vnc -display :99 -nopw -listen localhost -xkb -ncache 10 -ncache_cr -forever > /dev/null 2>&1 &
+
+    - name: Run GUI application
+      continue-on-error: true
+      run: |
+        ls        
+        export DISPLAY=:99
+        timeout 1m freecad --hidden ./Mechanical/Design/${{ matrix.component }}/${{ matrix.component }}.FCStd ./.github/workflows/freecad_export.py step pdf
+
+    - name: Stop x11vnc
+      run: pkill x11vnc
+
+    - name: Set Date
+      run: echo "action_date=$(date +'%Y-%m-%d-%H%M')" >> $GITHUB_ENV
+        
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: "result_${{ matrix.component }}_${{ env.action_date }}"
+        path: temp/*.*
