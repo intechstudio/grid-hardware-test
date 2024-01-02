@@ -6,15 +6,83 @@ import PartGui
 import PartDesignGui
 import ImportGui
 
+import sys
+
+print(f"sys.argv = {sys.argv}")
+
 import os 
 if os.path.isdir("temp"):
   print("Directory already exists")
 else:
   os.mkdir("temp")
 
-App.openDocument("Mechanical/Design/PCBA-ENDLESSPOT/PCBA-ENDLESSPOT.FCStd")
+export_list = sys.argv[3:]
 
-objs = App.ActiveDocument.Objects
+print(f"export_list = {export_list}")
+
+if "stl" in export_list:
+  print("export stl requested")
+if "step" in export_list:
+  print("export step requested")
+if "pdf" in export_list:
+  print("export pdf requested")
+
+docname = sys.argv[2]
+print("Opening document: ", docname, os.path.isfile(docname))
+App.openDocument(docname)
+
+def hideAll():
+  doc = App.ActiveDocument
+  assert(doc)
+  bodies = [obj for obj in doc.Objects if obj.isDerivedFrom("PartDesign::Body")]
+  shown = []
+  for body in bodies:
+    grp = body.Group
+    # print (body.Label)
+    App.Gui.ActiveDocument.getObject(body.Name).hide()
+
+def showPartDesignBody(name):
+  doc = App.ActiveDocument
+  assert(doc)
+  bodies = [obj for obj in doc.Objects if obj.isDerivedFrom("PartDesign::Body")]
+  shown = []
+  hideAll()
+  for body in bodies:
+    if body.Label == name:
+      grp = body.Group
+      #print (body.Label)
+      App.Gui.ActiveDocument.getObject(body.Name).show()
+      for feat in body.Origin.OriginFeatures:
+        if feat.Label in shown:
+          continue
+        shown.append(feat.Label)
+
+      for item in grp:
+        if item.TypeId == "Sketcher::SketchObject":
+          continue
+
+        #print(f"-->{item.TypeId} {item.Label}")
+        App.Gui.ActiveDocument.getObject(item.Name).show()
+
+def exportScreenshot(label, filename):
+  hideAll()
+  showPartDesignBody(label)
+
+  view = FreeCADGui.ActiveDocument.ActiveView
+  view.viewAxometric()
+  print("STEP 3",filename)
+  view.fitAll()
+  print("STEP 4",filename)
+  FreeCADGui.updateGui()
+  print("STEP 5",filename)
+  
+  print("SCREENSHOT", label, filename)
+  App.Gui.ActiveDocument.ActiveView.saveImage(filename,3200,2400,'Transparent')
+
+  hideAll()
+
+
+# hideAll()
 
 for obj in objs:
   sono=App.ActiveDocument.getObject(obj.Name)
