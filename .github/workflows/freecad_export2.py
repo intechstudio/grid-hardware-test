@@ -82,13 +82,39 @@ def exportScreenshot(label, filename):
   hideAll()
 
 
-#hideAll()
-
 objs = App.ActiveDocument.Objects
 
+# ========= EXPORT App:Part to STEP =========
 for obj in objs:
   sono=App.ActiveDocument.getObject(obj.Name)
   # sono.ViewObject.show()
+
+  # Ez kell ide
+  FreeCADGui.updateGui()
+  FreeCADGui.updateGui()
+  FreeCADGui.updateGui()
+  FreeCADGui.updateGui()
+  FreeCADGui.updateGui()
+  FreeCADGui.updateGui()
+
+  if sono.TypeId == "App::Part":
+    print(obj.Label, obj.Name, "STEP")
+    sono.Shape.exportStep("temp/"+obj.Label+".step")
+    __objs__=[]
+    __objs__.append(App.ActiveDocument.getObject(obj.Name))
+    print(__objs__)
+    import ImportGui
+    ImportGui.export(__objs__,"temp/"+obj.Label+"2.step")
+
+  # sono.ViewObject.hide()
+
+
+hideAll()
+
+# ========= EXPORT PartDesign::Body to STEP, STL, PDF =========
+for obj in objs:
+  sono=App.ActiveDocument.getObject(obj.Name)
+  sono.ViewObject.show()
 
   # Ez kell ide
   FreeCADGui.updateGui()
@@ -113,38 +139,10 @@ for obj in objs:
       print(obj.Label, obj.Name, "STL")
       sono.Shape.exportStl("temp/"+obj.Label+".stl")
 
-  if sono.TypeId == "App::Part":
-    print(obj.Label, obj.Name, "STEP")
-    sono.Shape.exportStep("temp/"+obj.Label+".step")
-    __objs__=[]
-    __objs__.append(App.ActiveDocument.getObject(obj.Name))
-    print(__objs__)
-    import ImportGui
-    ImportGui.export(__objs__,"temp/"+obj.Label+"2.step")
-
   elif sono.TypeId == "TechDraw::DrawPage":
     if "pdf" in export_list:
       print(obj.Label, obj.Name, "DRAW")
       TechDrawGui.export([sono],u"temp/"+obj.Label+".pdf")
 
-  # sono.ViewObject.hide()
+  sono.ViewObject.hide()
 
-
-#hideAll()
-
-
-
-
-print("DONE")
-
-App.Gui.SendMsgToActiveView("Save")
-print("DONE2")
-
-App.ActiveDocument.save()
-print("DONE3")
-
-
-App.Gui.getMainWindow().close()
-
-# sys.exit(0)
-# exit(0)
