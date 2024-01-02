@@ -1,7 +1,10 @@
 import FreeCAD
+import FreeCADGui
+import TechDrawGui
 
-import Part
-
+import PartGui
+import PartDesignGui
+import ImportGui
 
 import os 
 if os.path.isdir("temp"):
@@ -15,6 +18,14 @@ objs = App.ActiveDocument.Objects
 
 for obj in objs:
   sono=App.ActiveDocument.getObject(obj.Name)
+
+  # Ez kell ide
+  FreeCADGui.updateGui()
+  FreeCADGui.updateGui()
+  FreeCADGui.updateGui()
+  FreeCADGui.updateGui()
+  FreeCADGui.updateGui()
+  FreeCADGui.updateGui()
 
   if sono.TypeId == "PartDesign::Body":
 

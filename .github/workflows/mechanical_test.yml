@@ -62,7 +62,7 @@ jobs:
 
     - name: Generate Preview PNG
       run: |
-        # ./.github/workflows/openscad_preview.sh
+        ./.github/workflows/openscad_preview.sh
 
     - name: Stop x11vnc
       run: pkill x11vnc
