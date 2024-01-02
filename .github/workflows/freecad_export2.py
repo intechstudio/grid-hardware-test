@@ -82,7 +82,7 @@ def exportScreenshot(label, filename):
   hideAll()
 
 
-hideAll()
+#hideAll()
 
 objs = App.ActiveDocument.Objects
 for obj in objs:
@@ -132,7 +132,7 @@ for obj in objs:
   sono.ViewObject.hide()
 
 
-hideAll()
+#hideAll()
 
 
 
