@@ -11,6 +11,8 @@ else:
 
 App.openDocument("Mechanical/Design/PCBA-ENDLESSPOT/PCBA-ENDLESSPOT.FCStd")
 
+objs = App.ActiveDocument.Objects
+
 for obj in objs:
   sono=App.ActiveDocument.getObject(obj.Name)
   sono.ViewObject.show()
