@@ -85,12 +85,10 @@ def exportScreenshot(label, filename):
 #hideAll()
 
 objs = App.ActiveDocument.Objects
-for obj in objs:
-  sono=App.ActiveDocument.getObject(obj.Name)
 
 for obj in objs:
   sono=App.ActiveDocument.getObject(obj.Name)
-  sono.ViewObject.show()
+  # sono.ViewObject.show()
 
   # Ez kell ide
   FreeCADGui.updateGui()
@@ -129,7 +127,7 @@ for obj in objs:
       print(obj.Label, obj.Name, "DRAW")
       TechDrawGui.export([sono],u"temp/"+obj.Label+".pdf")
 
-  sono.ViewObject.hide()
+  # sono.ViewObject.hide()
 
 
 #hideAll()
