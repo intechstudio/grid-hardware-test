@@ -117,9 +117,12 @@ for obj in objs:
 
   if sono.TypeId == "App::Part":
     print(obj.Label, obj.Name, "STEP")
-    print(".Shape not available")
-    Part.export([sono],"temp/"+obj.Label+".step")          
-    ImportGui.export([sono],"temp/"+obj.Label+"_test.step")
+    sono.Shape.exportStep("temp/"+obj.Label+".step")
+    __objs__=[]
+    __objs__.append(App.ActiveDocument.getObject(obj.Name))
+    print(__objs__)
+    import ImportGui
+    ImportGui.export(__objs__,"temp/"+obj.Label+"2.step")
 
   elif sono.TypeId == "TechDraw::DrawPage":
     if "pdf" in export_list:
