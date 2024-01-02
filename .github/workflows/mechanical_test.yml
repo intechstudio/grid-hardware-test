@@ -35,7 +35,7 @@ jobs:
       run: |
         ls        
         export DISPLAY=:99
-        timeout 1m freecad --hidden ./Mechanical/Design/${{ matrix.component }}/${{ matrix.component }}.FCStd ./.github/workflows/freecad_export.py step pdf
+        timeout 1m freecad --hidden ./.github/workflows/freecad_export2.py step
 
     - name: Stop x11vnc
       run: pkill x11vnc
@@ -47,4 +47,4 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: "result_${{ matrix.component }}_${{ env.action_date }}"
-        path: temp/*.*
+        path: ./*.step
