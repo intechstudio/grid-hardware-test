@@ -58,7 +58,7 @@ jobs:
         conda install -c conda-forge pythonocc-core=7.7.0 --yes
 
         conda --version
-        # python ./.github/workflows/pythonocc_step_to_stl.py
+        python ./.github/workflows/pythonocc_step_to_stl.py
 
     - name: Generate Preview PNG
       run: |
